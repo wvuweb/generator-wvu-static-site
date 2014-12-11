@@ -18,8 +18,8 @@ module.exports = yeoman.generators.Base.extend({
 
     var done = this.async();
 
-    if (!this.options['skiop-welcome-message']) {
-      this.log(require('yosay')('Yo WVU,         Make me a static site!'));
+    if (!this.options['skip-welcome-message']) {
+      this.log(require('yosay')('Yo WVU,                Make me a static site!'));
       this.log(chalk.magenta(
         'Out of the box I include the wvu-starter-kit and the directory ' +
         'structure you need to start coding your static web site.'
@@ -148,10 +148,10 @@ module.exports = yeoman.generators.Base.extend({
     if (this.options.test == true) {
       this.prompt([], function(){
         this.siteName = "test";
-        this.siteDescription = "test theme";
+        this.siteDescription = "test site";
         this.siteVersion = "0.0.1";
         this.siteDomain = "test.wvu.edu";
-        this.siteGitRepo = "http://stash.development.wvu.edu/scm/cst/test.git";
+        this.siteGitRepo = "http://stash.development.wvu.edu/SH/test.git";
         this.authorName = "test";
         this.authorEmail = "test@mail.wvu.edu";
         this.jquery = true;
@@ -172,11 +172,11 @@ module.exports = yeoman.generators.Base.extend({
           return features && features.indexOf(feat) !== -1;
         }
 
-        this.siteName = answers.theme_name;
-        this.siteDescription = answers.theme_description;
-        this.siteVersion = answers.theme_version;
-        this.siteDomain = answers.theme_domain;
-        this.siteGitRepo = answers.theme_repository;
+        this.siteName = answers.site_name;
+        this.siteDescription = answers.site_description;
+        this.siteVersion = answers.site_version;
+        this.siteDomain = answers.site_domain;
+        this.siteGitRepo = answers.site_repository;
         this.authorName = answers.author_name;
         this.authorEmail = answers.author_email;
         this.jquery = hasFeature('includeJquery');
@@ -202,9 +202,18 @@ module.exports = yeoman.generators.Base.extend({
     done();
   },
 
+  gemset: function(){
+    var done = this.async();
+    this.copy('_Gemfile','Gemfile');
+    this.copy('ruby-gemset', '.ruby-gemset');
+    this.copy('ruby-version','.ruby-version');
+    done();
+  },
+
   gulp: function(){
     var done = this.async();
     this.template('_gulpfile.js','gulpfile.js');
+    this.copy('scss-lint.yml','.scss-lint.yml');
     done();
   },
 
@@ -226,32 +235,44 @@ module.exports = yeoman.generators.Base.extend({
     done();
   },
 
-  theme_directories: function(){
+  site_directories: function(){
     var done = this.async();
     this.mkdir('build');
     this.mkdir('dist');
     this.mkdir('build/javascripts');
     this.mkdir('build/scss');
     this.mkdir('build/images');
+    this.mkdir('build/handlebars');
+    this.mkdir('build/handlebars/partials');
+    this.mkdir('build/handlebars/data');
     this.mkdir('dist/javascripts');
     this.mkdir('dist/stylesheets');
     this.mkdir('dist/images');
     done();
   },
 
-  install: function () {
-    this.on('end', function () {
+  site_defaults: function(){
+    var done = this.async();
+    this.template('_index.json','build/handlebars/data/index.json');
+    this.template('_index.hbs','build/handlebars/index.hbs');
+    this.template('_backpage.hbs','build/handlebars/backpage.hbs');
+    this.template('_header.hbs','build/handlebars/partials/_header.hbs');
+    this.template('_ga.hbs','build/handlebars/partials/_ga.hbs');
+    this.copy('_styles.scss','build/scss/styles.scss');
+    done();
+  },
 
+  install: function () {
+    //this.on('end', function () {
       if (!this.options['skip-install']) {
         this.installDependencies({
           skipMessage: this.options['skip-install-message'],
           skipInstall: this.options['skip-install'],
           callback: function () {
-            this.spawnCommand('gulp', ['sass']);
-            //this.spawnCommand('gulp', ['cleanslate:copy:views','cleanslate:beautify:views','cleanslate:beautify:gulpfile','sass']);
+            this.spawnCommand('gulp', ['build']);
           }.bind(this) // bind the callback to the parent scope
         });
       }
-    });
+    //});
   }
 });

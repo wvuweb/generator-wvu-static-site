@@ -1,0 +1,12 @@
+{
+  "title" : "<%= siteName %>",
+  "attribution" : "West Virginia University",
+  "ga" : {
+    "site" : "",
+    "global" : "UA-31189476-28"
+  },
+  "content_example":"This content",
+  "backpage": {
+    "content_example": "Backpage content"
+  }
+}
