@@ -1,10 +1,10 @@
-#WVU CleanSlate site Generator
+#WVU Static site Generator
 
 [![Build Status](https://travis-ci.org/wvuweb/generator-wvu-static-site.svg?branch=master)](https://travis-ci.org/wvuweb/generator-wvu-static-site)
 
 The purpose of this generator is to quickly bootstrap Static Sites for West Virginia University web developers.
 
-**NPM** [https://www.npmjs.org/package/generator-wvu-cleanslate-site](https://www.npmjs.org/package/generator-wvu-cleanslate-site)
+**NPM** [https://www.npmjs.org/package/generator-wvu-static-site](https://www.npmjs.org/package/generator-wvu-static-site)
 
 
 ###Installation
