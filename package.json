@@ -1,0 +1,34 @@
+{
+  "name": "generator-wvu-static-site",
+  "version": "0.0.1",
+  "description": "WVU Static Site Generator",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wvuweb/generator-wvu-cleanslate-theme.git"
+  },
+  "keywords": [
+    "yeoman-generator",
+    "wvu",
+    "west virginia university"
+  ],
+  "author": "Steven Spriggs <steven.spriggs@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wvuweb/generator-wvu-static-site/issues"
+  },
+  "homepage": "https://github.com/wvuweb/generator-wvu-static-site",
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "lodash": "^2.4.1",
+    "underscore.string": "^2.4.0",
+    "yeoman-generator": "^0.18.3",
+    "yosay": "^1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1"
+  }
+}
