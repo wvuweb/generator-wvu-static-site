@@ -1,6 +1,6 @@
 {
   "name": "generator-wvu-static-site",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "WVU Static Site Generator",
   "main": "app/index.js",
   "scripts": {

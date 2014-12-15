@@ -109,7 +109,7 @@ gulp.task('compile', function () {
       './build/handlebars'
     ]
   }
-  return gulp.src('./build/handlebars/**/*.hbs')
+  return gulp.src('./build/handlebars/*.hbs')
   .pipe(handlebars(templateData, options))
   .pipe(rename({
     extname: '.html'
