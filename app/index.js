@@ -270,12 +270,8 @@ module.exports = yeoman.generators.Base.extend({
           skipInstall: this.options['skip-install'],
           callback: function () {
             this.spawnCommand('gulp', ['install']).on('close', function () {
-              console.log('The Gulp Install task has completed.');
+              console.log(chalk.green('The Gulp Install task has completed.'));
             });
-            this.spawnCommand('gulp', ['build']).on('close', function () {
-              console.log('The Gulp Build task has completed.');
-            });
-
           }.bind(this) // bind the callback to the parent scope
         });
       }

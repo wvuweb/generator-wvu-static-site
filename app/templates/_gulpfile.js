@@ -174,7 +174,7 @@ gulp.task('build',function(){
 
 // Install all needed files
 gulp.task('install',function(){
-  runSequence('copy-data','copy-hbs');
+  runSequence('copy-data','copy-hbs','build');
 });
 
 // Watch Task
