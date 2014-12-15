@@ -15,16 +15,16 @@ beautify = require('gulp-js-beaut'),
 notify = require('gulp-notify'),
 json = require('jsonfile'),
 imagemin = require('gulp-imagemin'),
-pngquant = require('imagemin-pngquant');
-
-var random = "";
+pngquant = require('imagemin-pngquant'),
+flatten = require('gulp-flatten'),
+conflict = require('gulp-conflict');
 
 <% if (reload == 'browsersync') { %>
 // BrowserSync Loading Task
 gulp.task('browser-sync', function() {
   browserSync({
     server: {
-      baseDir: "./public/",
+      baseDir: "./dist/",
     },
     open: false,
     logConnections: true,
@@ -68,39 +68,45 @@ gulp.task('compile-scss', function () {
     outputStyle: "compressed"
   }))
   .pipe(prefix("last 1 version", "> 1%", "ie 8", { cascade: true }))
-  .pipe(gulp.dest('./public/stylesheets'))
+  .pipe(gulp.dest('./dist/stylesheets'))
   .pipe(browserSync.reload({stream:true}))
   .pipe(notify("Browser reloaded with goodness..."));
 });
 
+
+// Copy Pattern JSON files
+gulp.task('copy-data',function(){
+  return gulp.src('./bower_components/wvu-patterns-**/src/handlebars/data/*.json')
+  .pipe(flatten())
+  .pipe(conflict('./build/handlebars/data'))
+  .pipe(gulp.dest('./build/handlebars/data'));
+});
+
+// Copy Pattern HBS files
+gulp.task('copy-hbs',function(){
+  return gulp.src('./bower_components/wvu-patterns-**/src/handlebars/**/*.hbs')
+  .pipe(flatten())
+  .pipe(conflict('./build/handlebars/data'))
+  .pipe(gulp.dest('./build/handlebars/partials'));
+});
+
 // Build JSON
 gulp.task('build-json',function(){
-  random = Math.random().toString(36).slice(2)+".json";
-
   return gulp.src([
-    './bower_components/wvu-patterns-**/src/handlebars/data/*.json',
     './build/handlebars/data/*.json'
   ])
-  .pipe(extend('index.json',true,2))
+  .pipe(extend('app.json',true,2))
   .pipe(rename('complete.json'))
   .pipe(gulp.dest("./build/handlebars/data/tmp"));
 });
 
 // Compile all JSON from patterns
 gulp.task('compile', function () {
-
   var templateData = json.readFileSync('./build/handlebars/data/tmp/complete.json');
-
   var options = {
     batch : [
-    './bower_components/wvu-patterns-masthead/src/handlebars',
-    './bower_components/wvu-patterns-masthead-logo/src/handlebars',
-    './bower_components/wvu-patterns-masthead-links/src/handlebars',
-    './bower_components/wvu-patterns-footer/src/handlebars',
-    './bower_components/wvu-patterns-footer-credits/src/handlebars',
-    './bower_components/wvu-patterns-footer-links/src/handlebars',
-    './build/handlebars/partials',
-    './build/handlebars'
+      './build/handlebars/partials',
+      './build/handlebars'
     ]
   }
   return gulp.src('./build/handlebars/**/*.hbs')
@@ -108,16 +114,16 @@ gulp.task('compile', function () {
   .pipe(rename({
     extname: '.html'
   }))
-  .pipe(gulp.dest('./public'))
+  .pipe(gulp.dest('./dist'))
 });
 
 gulp.task('clean', function(cb){
   return del([
     './build/handlebars/data/tmp/*.json',
-    './public/javascripts/',
-    './public/stylesheets/',
-    './public/*.html',
-    './public/fonts/'
+    './dist/javascripts/',
+    './dist/stylesheets/',
+    './dist/*.html',
+    './dist/fonts/'
     ], {'force':'true'}, cb);
 });
 
@@ -128,12 +134,12 @@ gulp.task('compress-images', function () {
     svgoPlugins: [{removeViewBox: false}],
     use: [pngquant()]
   }))
-  .pipe(gulp.dest('./public/images'));
+  .pipe(gulp.dest('./dist/images'));
 });
 
 gulp.task('move-fonts',function(){
   return gulp.src(['./bower_components/**/fonts/**/*','./build/fonts/**/*'])
-  .pipe(gulp.dest('./public/fonts'));
+  .pipe(gulp.dest('./dist/fonts'));
 });
 
 // For more information: https://github.com/zeroedin/gulp-js-beaut
@@ -154,16 +160,21 @@ gulp.task('tidy-html', function(){
   };
 
   return gulp.src([
-  './public/index.html'
+  './dist/index.html'
   ])
   .pipe(beautify(config))
-  .pipe(gulp.dest('./public'))
+  .pipe(gulp.dest('./dist'))
   .pipe(browserSync.reload({stream:true}));
 });
 
 // Build Squence Task
 gulp.task('build',function(){
   runSequence('clean','build-json','compile-scss','compile','compress-images','move-fonts','tidy-html');
+});
+
+// Install all needed files
+gulp.task('install',function(){
+  runSequence('copy-data','copy-hbs');
 });
 
 // Watch Task

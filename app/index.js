@@ -253,7 +253,7 @@ module.exports = yeoman.generators.Base.extend({
 
   site_defaults: function(){
     var done = this.async();
-    this.template('_index.json','build/handlebars/data/index.json');
+    this.template('_app.json','build/handlebars/data/app.json');
     this.template('_index.hbs','build/handlebars/index.hbs');
     this.template('_backpage.hbs','build/handlebars/backpage.hbs');
     this.template('_header.hbs','build/handlebars/partials/_header.hbs');
@@ -269,7 +269,13 @@ module.exports = yeoman.generators.Base.extend({
           skipMessage: this.options['skip-install-message'],
           skipInstall: this.options['skip-install'],
           callback: function () {
-            this.spawnCommand('gulp', ['build']);
+            this.spawnCommand('gulp', ['install']).on('close', function () {
+              console.log('The Gulp Install task has completed.');
+            });
+            this.spawnCommand('gulp', ['build']).on('close', function () {
+              console.log('The Gulp Build task has completed.');
+            });
+
           }.bind(this) // bind the callback to the parent scope
         });
       }
