@@ -271,6 +271,7 @@ module.exports = yeoman.generators.Base.extend({
           callback: function () {
             this.spawnCommand('gulp', ['install']).on('close', function () {
               console.log(chalk.green('The Gulp Install task has completed.'));
+              console.log(chalk.yellow.inverse('Run `gulp` to launch the project.'));
             });
           }.bind(this) // bind the callback to the parent scope
         });
