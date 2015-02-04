@@ -28,7 +28,7 @@ describe('wvu-static-site generator', function () {
       '.gitattributes',
       'README.md',
       'build/handlebars/index.hbs',
-      'build/handlebars/data/index.json'
+      'build/handlebars/data/app.json'
     ];
 
     helpers.mockPrompt(this.app, {
